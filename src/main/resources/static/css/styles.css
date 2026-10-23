@@ -1,0 +1,1048 @@
+/* ==========================================================================
+   Main Quest - "gamer refinado"
+   Paleta: Jet Black / Soft White / Bold Blue / Light Blue (+ un verde solo
+   para el estado "misión completada").
+   Los selectores que usa js/app.js se conservan: .quest-card(.completed),
+   .filter-btn(.active), .rank-card(.active-rank), .xp-bar-fill,
+   .toast-level-up(.show), .xp-float
+   ========================================================================== */
+
+:root {
+    --mq-bg: #0D0D0D;
+    --mq-surface: #141417;
+    --mq-surface-2: #1B1C22;
+    --mq-line: rgba(250, 250, 250, 0.08);
+    --mq-line-strong: rgba(250, 250, 250, 0.16);
+
+    --mq-text: #FAFAFA;
+    --mq-text-2: rgba(250, 250, 250, 0.66);
+
+    --mq-blue-900: #1C22A8;
+    --mq-blue-500: #4263E0;
+    --mq-blue-400: #5878EA;
+    --mq-blue-600: #3856CC;
+    --mq-blue-300: #9AAEF5;
+
+    --mq-success: #3FA36B;
+
+    --mq-radius-card: 16px;
+    --mq-radius-input: 12px;
+    --mq-radius-pill: 999px;
+
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    /* spring critically damped (sin rebote), aproximado con linear() */
+    --spring: linear(0, 0.18 5%, 0.46 12%, 0.7 20%, 0.86 30%, 0.95 42%, 0.99 56%, 1);
+
+    --font-body: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-display: 'Outfit', system-ui, sans-serif;
+    --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    background: var(--mq-bg);
+}
+
+body {
+    background-color: var(--mq-bg);
+    background-image: radial-gradient(ellipse 60% 420px at 85% 0%, rgba(66, 99, 224, 0.14), transparent 70%);
+    background-repeat: no-repeat;
+    color: var(--mq-text);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .font-heading {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+.quest-card:focus-visible {
+    outline: 2px solid var(--mq-blue-300);
+    outline-offset: 2px;
+}
+
+.main-content {
+    padding-top: 2.5rem;
+}
+
+/* Utilidades visuales propias (reemplazan text-muted / text-warning de Bootstrap) */
+.mq-text-2 { color: var(--mq-text-2); }
+.mq-accent { color: var(--mq-blue-300); }
+.mq-mono   { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ==========================================================================
+   Navbar (material translúcido)
+   ========================================================================== */
+.mq-navbar {
+    background: rgba(13, 13, 13, 0.72);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(160%);
+    border-bottom: 1px solid var(--mq-line);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+.mq-navbar .container {
+    flex-wrap: nowrap;
+    min-height: 40px;
+}
+
+.mq-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+    color: var(--mq-text);
+    flex-shrink: 0;
+}
+
+.mq-brand:hover { color: var(--mq-text); }
+
+.mq-brand-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--mq-blue-500);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: grid;
+    place-items: center;
+    color: #FFFFFF;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 0;
+}
+
+.mq-brand-text {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+}
+
+.status-badge {
+    background: rgba(63, 163, 107, 0.1);
+    border: 1px solid rgba(63, 163, 107, 0.28);
+    color: #7BCB9F;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--mq-radius-pill);
+    font-size: 0.78rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    white-space: nowrap;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--mq-success);
+    border-radius: 50%;
+}
+
+/* ==========================================================================
+   Botones
+   ========================================================================== */
+.btn-mq-primary,
+.btn-mq-soft,
+.btn-mq-ghost,
+.btn-mq-outline {
+    --bs-btn-color: var(--b-fg);
+    --bs-btn-bg: var(--b-bg);
+    --bs-btn-border-color: var(--b-bd);
+    --bs-btn-hover-color: var(--b-fg);
+    --bs-btn-hover-bg: var(--b-bg);
+    --bs-btn-hover-border-color: var(--b-bd);
+    --bs-btn-active-color: var(--b-fg);
+    --bs-btn-active-bg: var(--b-bg-h);
+    --bs-btn-active-border-color: var(--b-bd);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.3rem;
+    border-radius: var(--mq-radius-pill);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    color: var(--b-fg);
+    background-color: var(--b-bg);
+    border: 1px solid var(--b-bd);
+    transition: transform 140ms var(--ease-out),
+                background-color 160ms ease,
+                border-color 160ms ease,
+                color 160ms ease;
+}
+
+.btn-sm.btn-mq-primary,
+.btn-sm.btn-mq-soft,
+.btn-sm.btn-mq-ghost,
+.btn-sm.btn-mq-outline {
+    padding: 0.45rem 0.95rem;
+    font-size: 0.85rem;
+}
+
+.btn-mq-primary {
+    --b-fg: #FFFFFF;
+    --b-bg: var(--mq-blue-500);
+    --b-bg-h: var(--mq-blue-400);
+    --b-bd: transparent;
+}
+
+.btn-mq-soft {
+    --b-fg: var(--mq-text);
+    --b-bg: rgba(28, 34, 168, 0.55);
+    --b-bg-h: rgba(28, 34, 168, 0.8);
+    --b-bd: rgba(66, 99, 224, 0.45);
+}
+
+.btn-mq-ghost,
+.btn-mq-outline {
+    --b-fg: var(--mq-text);
+    --b-bg: transparent;
+    --b-bg-h: rgba(250, 250, 250, 0.07);
+    --b-bd: var(--mq-line-strong);
+}
+
+.btn-mq-primary:active,
+.btn-mq-soft:active,
+.btn-mq-ghost:active,
+.btn-mq-outline:active {
+    transform: scale(0.97);
+    background-color: var(--b-bg-h);
+    color: var(--b-fg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .btn-mq-primary:hover,
+    .btn-mq-soft:hover,
+    .btn-mq-ghost:hover,
+    .btn-mq-outline:hover {
+        background-color: var(--b-bg-h);
+        color: var(--b-fg);
+    }
+    .btn-mq-ghost:hover,
+    .btn-mq-outline:hover {
+        border-color: rgba(250, 250, 250, 0.3);
+    }
+}
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+.hero-section {
+    padding: 1.5rem 0 4.5rem;
+}
+
+.mq-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.9rem;
+    margin-bottom: 1.25rem;
+    border-radius: var(--mq-radius-pill);
+    background: rgba(66, 99, 224, 0.14);
+    border: 1px solid rgba(66, 99, 224, 0.4);
+    color: var(--mq-blue-300);
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.hero-title {
+    font-size: clamp(2.15rem, 4.2vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+    margin: 0 0 1.25rem;
+    color: var(--mq-text);
+    text-wrap: balance;
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--mq-text-2);
+    max-width: 52ch;
+    margin: 0 0 2rem;
+}
+
+/* Entrada del hero: una sola vez, solo opacity + transform */
+@media (prefers-reduced-motion: no-preference) {
+    .hero-copy > *,
+    .hero-section .player-card {
+        animation: mq-rise 520ms var(--ease-out) both;
+    }
+    .hero-copy > *:nth-child(2) { animation-delay: 60ms; }
+    .hero-copy > *:nth-child(3) { animation-delay: 120ms; }
+    .hero-copy > *:nth-child(4) { animation-delay: 180ms; }
+    .hero-section .player-card  { animation-delay: 140ms; }
+}
+
+@keyframes mq-rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   Player card
+   ========================================================================== */
+.player-card {
+    background: var(--mq-surface);
+    border: 1px solid var(--mq-line);
+    border-radius: var(--mq-radius-card);
+    padding: 1.75rem;
+    box-shadow: 0 28px 60px -28px rgba(28, 34, 168, 0.55),
+                inset 0 1px 0 rgba(250, 250, 250, 0.05);
+}
+
+.player-avatar-wrapper {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+}
+
+.player-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--mq-blue-900);
+    border: 1px solid rgba(154, 174, 245, 0.35);
+    display: grid;
+    place-items: center;
+    font-size: 1.35rem;
+    color: #FFFFFF;
+}
+
+.mq-level {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--mq-text);
+}
+
+.rank-badge {
+    display: inline-block;
+    background: rgba(66, 99, 224, 0.16);
+    border: 1px solid rgba(66, 99, 224, 0.45);
+    color: var(--mq-blue-300);
+    font-weight: 600;
+    font-size: 0.72rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: var(--mq-radius-pill);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.mq-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--mq-text-2);
+    margin-bottom: 0.6rem;
+}
+
+.mq-meta-row strong {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--mq-text);
+    font-weight: 500;
+}
+
+.xp-bar-container {
+    height: 10px;
+    background: var(--mq-surface-2);
+    border-radius: var(--mq-radius-pill);
+    overflow: hidden;
+}
+
+.xp-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--mq-blue-500);
+    border-radius: var(--mq-radius-pill);
+    transition: width 500ms var(--ease-out);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--mq-line);
+}
+
+.stat-box {
+    text-align: left;
+    padding: 0 0.75rem;
+    border-left: 1px solid var(--mq-line);
+}
+
+.stat-box:first-child {
+    padding-left: 0;
+    border-left: 0;
+}
+
+.stat-val {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    font-size: 1.35rem;
+    line-height: 1.2;
+    color: var(--mq-text);
+}
+
+.stat-label {
+    font-size: 0.78rem;
+    color: var(--mq-text-2);
+    margin-top: 0.2rem;
+}
+
+/* ==========================================================================
+   Secciones
+   ========================================================================== */
+.mq-section {
+    padding: clamp(2.5rem, 6vw, 4.5rem) 0 0;
+}
+
+.mq-section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.mq-h2 {
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin: 0 0 0.5rem;
+}
+
+.mq-section-head p {
+    margin: 0;
+    max-width: 56ch;
+}
+
+/* ==========================================================================
+   Filtros
+   ========================================================================== */
+.filter-tabs {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid var(--mq-line-strong);
+    color: var(--mq-text-2);
+    font-family: var(--font-body);
+    padding: 0.45rem 1.1rem;
+    border-radius: var(--mq-radius-pill);
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: transform 140ms var(--ease-out),
+                background-color 160ms ease,
+                border-color 160ms ease,
+                color 160ms ease;
+}
+
+.filter-btn:active {
+    transform: scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .filter-btn:hover {
+        color: var(--mq-text);
+        border-color: rgba(250, 250, 250, 0.3);
+    }
+}
+
+.filter-btn.active {
+    background: var(--mq-blue-500);
+    border-color: var(--mq-blue-500);
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   Misiones
+   ========================================================================== */
+.quest-card {
+    background: var(--mq-surface);
+    border: 1px solid var(--mq-line);
+    border-radius: var(--mq-radius-card);
+    padding: 1.1rem 1.35rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    cursor: pointer;
+    position: relative;
+    transition: transform 140ms var(--ease-out),
+                background-color 180ms ease,
+                border-color 180ms ease,
+                opacity 200ms ease;
+}
+
+.quest-card:active {
+    transform: scale(0.99);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .quest-card:hover {
+        background: var(--mq-surface-2);
+        border-color: rgba(66, 99, 224, 0.55);
+    }
+}
+
+.quest-card.completed {
+    border-color: rgba(63, 163, 107, 0.3);
+    background: rgba(63, 163, 107, 0.05);
+}
+
+.quest-card.completed .quest-title {
+    text-decoration: line-through;
+    text-decoration-color: rgba(250, 250, 250, 0.35);
+    color: var(--mq-text-2);
+}
+
+.quest-check {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(250, 250, 250, 0.28);
+    display: grid;
+    place-items: center;
+    color: #0D0D0D;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+    transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.quest-check i {
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 160ms ease, transform 220ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .quest-card:hover .quest-check {
+        border-color: var(--mq-blue-300);
+    }
+}
+
+.quest-card.completed .quest-check {
+    background: var(--mq-success);
+    border-color: var(--mq-success);
+}
+
+.quest-card.completed .quest-check i {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.quest-info {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.quest-title {
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.35;
+    margin-bottom: 0.2rem;
+}
+
+.quest-meta {
+    font-size: 0.82rem;
+    color: var(--mq-text-2);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.2rem 0.6rem;
+}
+
+.quest-xp-tag {
+    background: rgba(66, 99, 224, 0.14);
+    color: var(--mq-blue-300);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--mq-radius-pill);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.quest-card.completed .quest-xp-tag {
+    background: rgba(63, 163, 107, 0.14);
+    color: #7BCB9F;
+}
+
+/* ==========================================================================
+   Rangos
+   ========================================================================== */
+.rank-card {
+    background: var(--mq-surface);
+    border: 1px solid var(--mq-line);
+    border-radius: var(--mq-radius-card);
+    padding: 1.35rem;
+    height: 100%;
+    transition: background-color 200ms ease, border-color 200ms ease;
+}
+
+.rank-card h4 {
+    font-size: 1.1rem;
+    margin: 0 0 0.2rem;
+}
+
+.rank-card p {
+    margin: 0 0 0.2rem;
+    color: var(--mq-text-2);
+    font-size: 0.85rem;
+}
+
+.rank-card small {
+    color: var(--mq-blue-300);
+    font-weight: 600;
+    font-size: 0.82rem;
+}
+
+.rank-card.active-rank {
+    border-color: rgba(66, 99, 224, 0.7);
+    background: linear-gradient(180deg, rgba(28, 34, 168, 0.4) 0%, rgba(28, 34, 168, 0.12) 100%);
+}
+
+.rank-icon {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--mq-surface-2);
+    color: var(--mq-blue-300);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    transition: background-color 200ms ease, color 200ms ease;
+}
+
+.rank-card.active-rank .rank-icon {
+    background: var(--mq-blue-500);
+    color: #FFFFFF;
+}
+
+/* ==========================================================================
+   Modales y formularios (Bootstrap + data-bs-theme="dark")
+   ========================================================================== */
+.mq-modal {
+    --bs-modal-bg: var(--mq-surface);
+    --bs-modal-color: var(--mq-text);
+    --bs-modal-border-color: var(--mq-line);
+    --bs-modal-border-radius: var(--mq-radius-card);
+    --bs-modal-inner-border-radius: calc(var(--mq-radius-card) - 1px);
+    --bs-modal-header-border-color: var(--mq-line);
+    box-shadow: 0 32px 80px -24px rgba(0, 0, 0, 0.8);
+}
+
+.modal.fade .modal-dialog {
+    transform: scale(0.96);
+    opacity: 0;
+    transition: transform 240ms var(--ease-out), opacity 200ms ease;
+}
+
+.modal.show .modal-dialog {
+    transform: none;
+    opacity: 1;
+}
+
+.mq-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--mq-text-2);
+    margin-bottom: 0.4rem;
+}
+
+.mq-input {
+    background-color: var(--mq-surface-2);
+    border: 1px solid var(--mq-line-strong);
+    border-radius: var(--mq-radius-input);
+    color: var(--mq-text);
+    padding: 0.65rem 0.9rem;
+    font-family: var(--font-body);
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.mq-input:focus {
+    background-color: var(--mq-surface-2);
+    color: var(--mq-text);
+    border-color: var(--mq-blue-500);
+    box-shadow: 0 0 0 3px rgba(66, 99, 224, 0.3);
+}
+
+.mq-input::placeholder {
+    color: rgba(250, 250, 250, 0.5);
+}
+
+/* Contenedor reutilizable por el resto de páginas (login, admin, welcome) */
+.glass-card {
+    background: var(--mq-surface);
+    border: 1px solid var(--mq-line);
+    border-radius: var(--mq-radius-card);
+}
+
+/* Formularios de autenticación (login / registro) */
+.mq-auth {
+    max-width: 440px;
+    margin: 1.5rem auto 0;
+    padding: 2rem;
+    background: var(--mq-surface);
+    border: 1px solid var(--mq-line);
+    border-radius: var(--mq-radius-card);
+    box-shadow: 0 28px 60px -32px rgba(28, 34, 168, 0.5),
+                inset 0 1px 0 rgba(250, 250, 250, 0.05);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .mq-auth { animation: mq-rise 480ms var(--ease-out) both; }
+}
+
+.mq-auth-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin: 0 0 0.5rem;
+}
+
+.mq-auth-sub {
+    color: var(--mq-text-2);
+    font-size: 0.95rem;
+    margin: 0 0 1.75rem;
+}
+
+.mq-link {
+    color: var(--mq-blue-300);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .mq-link:hover {
+        color: var(--mq-text);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+}
+
+.mq-input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px var(--mq-surface-2) inset;
+    -webkit-text-fill-color: var(--mq-text);
+    caret-color: var(--mq-text);
+}
+
+.mq-input.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.3);
+}
+
+.mq-auth .invalid-feedback {
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+}
+
+@media (max-width: 575.98px) {
+    .mq-auth { padding: 1.5rem 1.25rem; margin-top: 0.5rem; }
+}
+
+/* Variante destructiva (semántica, fuera del azul de marca) */
+.btn-mq-primary.mq-danger {
+    --b-fg: #FFFFFF;
+    --b-bg: #C93C44;
+    --b-bg-h: #D84B53;
+}
+
+.btn-mq-ghost.mq-danger {
+    --b-fg: #F2999D;
+    --b-bg: transparent;
+    --b-bg-h: rgba(229, 72, 77, 0.14);
+    --b-bd: rgba(229, 72, 77, 0.4);
+}
+
+.mq-danger-text {
+    color: #F2999D;
+}
+
+.mq-hint:empty {
+    display: none;
+}
+
+.mq-hint {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--mq-text-2);
+}
+
+/* Tabla de administración */
+.mq-table-wrap {
+    overflow-x: auto;
+}
+
+.mq-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.mq-table th {
+    padding: 0.85rem 1.25rem;
+    text-align: left;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--mq-text-2);
+    border-bottom: 1px solid var(--mq-line);
+    white-space: nowrap;
+}
+
+.mq-table th.text-end { text-align: right; }
+
+.mq-table td {
+    padding: 0.9rem 1.25rem;
+    vertical-align: middle;
+}
+
+.mq-table tbody tr + tr td {
+    border-top: 1px solid var(--mq-line);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .mq-table tbody tr {
+        transition: background-color 160ms ease;
+    }
+    .mq-table tbody tr:hover {
+        background: var(--mq-surface-2);
+    }
+}
+
+.mq-cell-id,
+.mq-cell-xp {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+}
+
+.mq-cell-id { color: var(--mq-text-2); }
+.mq-cell-name { font-weight: 600; }
+
+.mq-cell-actions {
+    white-space: nowrap;
+}
+
+.mq-cell-actions > * + * {
+    margin-left: 0.4rem;
+}
+
+.mq-empty {
+    padding: 3rem 1.25rem;
+    text-align: center;
+    color: var(--mq-text-2);
+}
+
+@media (max-width: 575.98px) {
+    .mq-table th, .mq-table td { padding-left: 0.85rem; padding-right: 0.85rem; }
+}
+
+.table-dark {
+    --bs-table-bg: var(--mq-surface);
+    --bs-table-hover-bg: var(--mq-surface-2);
+    --bs-table-border-color: var(--mq-line);
+}
+
+/* ==========================================================================
+   Toast de level up
+   ========================================================================== */
+.toast-level-up {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    max-width: calc(100vw - 3rem);
+    background: var(--mq-surface-2);
+    border: 1px solid rgba(66, 99, 224, 0.5);
+    border-radius: var(--mq-radius-card);
+    padding: 1rem 1.35rem;
+    box-shadow: 0 24px 60px -20px rgba(28, 34, 168, 0.6);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 2000;
+    transform: translateY(150%);
+    opacity: 0;
+    visibility: hidden;
+    /* salida rápida (el sistema responde) */
+    transition: transform 220ms var(--ease-out),
+                opacity 160ms ease,
+                visibility 0s linear 220ms;
+}
+
+.toast-level-up.show {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+    /* entrada con spring */
+    transition: transform 520ms var(--spring),
+                opacity 200ms ease,
+                visibility 0s;
+}
+
+.mq-toast-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--mq-blue-500);
+    color: #FFFFFF;
+    display: grid;
+    place-items: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+/* ==========================================================================
+   XP flotante
+   ========================================================================== */
+.xp-float {
+    position: absolute;
+    color: var(--mq-blue-300);
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 1.25rem;
+    pointer-events: none;
+    animation: floatUp 900ms var(--ease-out) forwards;
+    z-index: 100;
+}
+
+@keyframes floatUp {
+    0%   { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-36px); }
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+footer {
+    border-top: 1px solid var(--mq-line);
+    padding: 2rem 0;
+    color: var(--mq-text-2);
+    font-size: 0.875rem;
+    margin-top: 5rem;
+}
+
+.mq-footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem 2rem;
+    flex-wrap: wrap;
+}
+
+.mq-footer-brand strong {
+    color: var(--mq-text);
+    font-weight: 600;
+}
+
+.mq-footer-sep {
+    display: inline-block;
+    width: 1px;
+    height: 0.9em;
+    margin: 0 0.75rem;
+    background: var(--mq-line-strong);
+    vertical-align: -0.1em;
+}
+
+footer code {
+    color: var(--mq-blue-300);
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 575.98px) {
+    .main-content { padding-top: 1.5rem; }
+    .hero-section { padding-bottom: 3rem; }
+    .player-card { padding: 1.25rem; }
+    .quest-card { padding: 1rem; gap: 0.85rem; align-items: flex-start; }
+    .quest-xp-tag { align-self: center; }
+    .stat-box { padding: 0 0.5rem; }
+    .stat-val { font-size: 1.1rem; }
+    .toast-level-up { left: 1rem; right: 1rem; bottom: 1rem; max-width: none; }
+    .mq-footer-sep { display: none; }
+    .mq-footer-brand strong { display: block; }
+    .btn-mq-primary, .btn-mq-outline { white-space: normal; }
+}
+
+/* ==========================================================================
+   Accesibilidad: movimiento y transparencia reducidos
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    .quest-card, .quest-check i, .filter-btn, .rank-card,
+    .btn-mq-primary, .btn-mq-soft, .btn-mq-ghost, .btn-mq-outline {
+        transition-property: background-color, border-color, color, opacity;
+    }
+    .quest-card:active, .filter-btn:active,
+    .btn-mq-primary:active, .btn-mq-soft:active,
+    .btn-mq-ghost:active, .btn-mq-outline:active { transform: none; }
+    .quest-check i { transform: none; }
+    .modal.fade .modal-dialog { transform: none; transition: opacity 160ms ease; }
+    .toast-level-up,
+    .toast-level-up.show {
+        transform: none;
+        transition: opacity 200ms ease, visibility 0s linear 200ms;
+    }
+    .toast-level-up.show { transition: opacity 200ms ease, visibility 0s; }
+    .xp-float { animation: mq-fade 900ms ease forwards; }
+    .xp-bar-fill { transition: none; }
+}
+
+@keyframes mq-fade {
+    0%   { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    .mq-navbar {
+        background: var(--mq-bg);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}

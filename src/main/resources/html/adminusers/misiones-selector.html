@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<head>
+    <title th:text="#{mision.selector.title}">Main Quest — Nueva misión</title>
+</head>
+<body>
+
+<div layout:fragment="page-content">
+    <h2 class="text-light my-4" th:text="#{mision.selector.section.title}">¿Qué tipo de misión querés crear?</h2>
+
+    <!-- Cartel temporal: aparece solo después de elegir un tipo -->
+    <div th:if="${tipo_elegido != null}" class="alert alert-info"
+         th:text="#{mision.selector.elegido(#{'mision.type.' + ${tipo_elegido}})}">
+        Elegiste: ...
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6" th:each="type : ${misiones_type}">
+            <div class="glass-card p-4 text-center">
+                <h3 class="text-warning fs-1"><i class="fa-solid fa-plus"></i></h3>
+                <p class="text-white-50 mb-0" th:text="#{mision.create.new}">Añadir nueva misión</p>
+                <a th:href="@{/admin/mision/edit/{type}(type=${type})}"
+                   class="btn-mq-primary mt-3"
+                   th:text="#{'mision.type.' + ${type}}">Tipo</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

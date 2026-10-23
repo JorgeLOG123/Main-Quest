@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<head>
+    <title th:text="#{game.welcome.title}">Main Quest — Jugar</title>
+</head>
+<body>
+
+<div layout:fragment="page-content">
+    <div class="glass-card p-5 my-5">
+        <h1 class="text-light mb-4" th:text="#{game.welcome.section.title}">¿Listo para comenzar?</h1>
+
+        <p class="text-white-50 mb-2 fs-5" th:text="#{game.welcome.user(${session.info.email})}"></p>
+        <p class="text-white-50 mb-4 fs-5" th:text="#{game.welcome.points(${session.info.puntos})}"></p>
+
+        <a href="#" class="btn-mq-primary" th:text="#{game.welcome.start.btn}">Jugar ahora</a>
+    </div>
+</div>
+
+</body>
+</html>

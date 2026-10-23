@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<head>
+    <title th:text="#{admin.misiones.title}">Main Quest — Misiones</title>
+</head>
+<body>
+
+<div layout:fragment="page-content">
+
+    <div class="mq-section-head">
+        <h1 class="mq-h2 mb-0" th:text="#{admin.misiones.section.title}">Misiones</h1>
+        <a th:href="@{/admin/mision/choose}" class="btn-mq-primary btn-sm" th:aria-label="#{nueva.mision.btn}">
+            <i class="fa-solid fa-plus"></i> <span th:text="#{nueva.mision.btn}">Nueva misión</span>
+        </a>
+    </div>
+
+    <div class="glass-card mq-table-wrap">
+        <table class="mq-table">
+            <thead>
+            <tr>
+                <th class="d-none d-md-table-cell" th:text="#{col.id}">ID</th>
+                <th th:text="#{col.nombre}">Nombre</th>
+                <th class="d-none d-sm-table-cell" th:text="#{col.tipo}">Tipo</th>
+                <th th:text="#{col.xp.final}">XP final</th>
+                <th th:text="#{col.estado}">Estado</th>
+                <th class="text-end" th:text="#{col.actions}">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="mision : ${listado}">
+                <td class="d-none d-md-table-cell mq-cell-id" th:text="${mision.id}"></td>
+                <td class="mq-cell-name" th:text="${mision.nombre}"></td>
+
+
+                <td class="d-none d-sm-table-cell mq-text-2">
+                    <span th:if="${mision.esSemanal()}"  th:text="#{mision.tipo.semanal}">Semanal</span>
+                    <span th:if="${!mision.esSemanal()}" th:text="#{mision.tipo.general}">General</span>
+                </td>
+
+                <td class="mq-cell-xp" th:text="${mision.calcularXpFinal()}"></td>
+
+                <td>
+                    <span th:if="${mision.estaActiva()}"  class="badge bg-success" th:text="#{estado.activa}">Activa</span>
+                    <span th:if="${!mision.estaActiva()}" class="badge bg-danger"  th:text="#{estado.eliminada}">Eliminada</span>
+                </td>
+
+                <td class="text-end mq-cell-actions">
+
+                    <button th:if="${mision.estaActiva()}"
+                            type="button" class="btn-mq-ghost mq-danger btn-sm"
+                            th:id="${'btnDelete-' + mision.id}"
+                            onclick="confirmarEliminacion(this)"
+                            th:attr="data-id=${mision.id}, data-nombre=${mision.nombre}, data-url=@{/admin/mision/delete}, aria-label=#{eliminar.btn}"
+                            data-bs-toggle="modal" data-bs-target="#deletionModal">
+                        <i class="fa-solid fa-trash"></i> <span class="d-none d-lg-inline" th:text="#{eliminar.btn}">Eliminar</span>
+                    </button>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(listado)}">
+                <td colspan="6" class="mq-empty" th:text="#{sin.misiones}">Todavía no hay misiones creadas</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- El MISMO pop-up, con otros textos -->
+    <th:block th:replace="~{layouts/fragments/deletion-modal :: modal(#{delete.mision.title}, #{delete.mision.warning})}"></th:block>
+
+</div>
+
+</body>
+</html>

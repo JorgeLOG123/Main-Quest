@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<head>
+    <title th:text="#{signup.title}">Main Quest — Registro</title>
+</head>
+<body>
+
+<div layout:fragment="page-content">
+    <div class="mq-auth" data-bs-theme="dark">
+        <h1 class="mq-auth-title" th:text="#{signup.form.title}">Crear Nuevo Jugador</h1>
+        <p class="mq-auth-sub" th:text="#{signup.form.subtitle}">Comienza tu aventura laboral registrando tu perfil.</p>
+
+        <form th:action="@{/registro}" method="post" th:object="${form}">
+
+            <div class="mb-3">
+                <label class="form-label mq-label" for="nombre" th:text="#{common.label.playerName}">Nombre de Jugador</label>
+                <input type="text" th:field="*{nombre}" class="form-control mq-input" th:errorclass="is-invalid" placeholder="Ej: Jorge Dev" th:placeholder="#{common.placeholder.name}" required="required">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label mq-label" for="email" th:text="#{common.label.email}">Correo Electrónico</label>
+                <input type="email" th:field="*{email}" class="form-control mq-input" th:errorclass="is-invalid" placeholder="jorge@email.com" th:placeholder="#{common.placeholder.email}" required="required">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label mq-label" for="contrasena" th:text="#{common.label.password}">Contraseña</label>
+                <input type="password" th:field="*{contrasena}" class="form-control mq-input" th:errorclass="is-invalid" minlength="5" placeholder="••••••••" th:placeholder="#{common.placeholder.password}" required="required">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}"></div>
+            </div>
+
+            <button type="submit" class="btn-mq-primary w-100" th:text="#{signup.form.btn.submit}">Registrar mi Partida</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

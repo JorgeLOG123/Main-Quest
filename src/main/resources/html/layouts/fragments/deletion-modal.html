@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Pieza reutilizable: recibe el título y la advertencia desde afuera -->
+<th:block th:fragment="modal(titulo, advertencia)">
+
+    <div id="deletionModal" class="modal fade" tabindex="-1" data-bs-theme="dark">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content mq-modal">
+
+                <form id="deletionFrm" action="" method="post">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title font-heading" th:text="${titulo}">Eliminar</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <input id="id" name="id" type="hidden" value="" />
+                        <p>
+                            <span th:text="#{delete.confirm.message}">¿Seguro que querés eliminar a</span>
+                            <strong id="deletionModal-nombre"></strong>?
+                        </p>
+                        <small class="mq-danger-text" th:text="${advertencia}">Advertencia</small>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn-mq-ghost" data-bs-dismiss="modal" th:text="#{close.btn}">Cancelar</button>
+                        <button type="submit" class="btn-mq-primary mq-danger" th:text="#{delete.btn}">Eliminar</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function confirmarEliminacion(btn) {
+            document.getElementById('deletionFrm').action = btn.dataset.url;                   // ¿a qué ventanilla lo mando?
+            document.getElementById('id').value = btn.dataset.id;                              // ¿qué cosa elimino?
+            document.getElementById('deletionModal-nombre').textContent = btn.dataset.nombre;  // ¿qué nombre muestro?
+        }
+    </script>
+
+</th:block>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<head>
+    <title th:text="#{mision.form.title}">Main Quest — Misión</title>
+</head>
+<body>
+
+<div layout:fragment="page-content">
+    <div class="row justify-content-center my-5">
+        <div class="col-md-7">
+            <div class="glass-card p-5">
+
+                <h2 class="text-light mb-4"
+                    th:text="#{mision.form.create.title(#{'mision.type.' + ${form.type}})}">
+                    Nueva misión
+                </h2>
+
+                <form th:object="${form}"
+                      th:action="@{/admin/mision/save/{type}(type=${form.type})}"
+                      method="post">
+
+
+                    <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
+                        <p class="mb-0" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label text-white-50" th:text="#{mision.form.nombre}">Nombre</label>
+                        <input id="nombre" type="text" th:field="*{nombre}"
+                               class="form-control bg-secondary bg-opacity-20 border-secondary text-light"/>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="xp" class="form-label text-white-50" th:text="#{mision.form.xp}">XP base</label>
+                        <input id="xp" type="number" min="1" th:field="*{xp}"
+                               class="form-control bg-secondary bg-opacity-20 border-secondary text-light"/>
+                    </div>
+
+                    <th:block th:if="${form.esGeneral()}">
+                        <div class="alert alert-secondary" th:text="#{mision.form.info.general}">
+                            La XP final es la misma XP base.
+                        </div>
+                    </th:block>
+
+                    <th:block th:if="${form.esSemanal()}">
+                        <div class="alert alert-warning" th:text="#{mision.form.info.semanal}">
+                            Las misiones semanales dan el doble de XP.
+                        </div>
+                    </th:block>
+
+                    <input type="hidden" th:field="*{id}"/>
+
+                    <div class="d-flex gap-2 justify-content-end mt-4">
+                        <a th:href="@{/admin/mision/choose}" class="btn btn-outline-light"
+                           th:text="#{mision.form.btn.cancel}">Cancelar</a>
+                        <button type="submit" class="btn-mq-primary"
+                                th:text="#{mision.form.btn.save}">Guardar</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

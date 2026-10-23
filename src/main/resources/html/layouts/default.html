@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+  <!-- FRAGMENTO HEADER -->
+  <head th:replace="~{layouts/fragments/header.html :: head}"></head>
+
+  <body>
+    <!-- FRAGMENTO NAVBAR -->
+    <nav th:replace="~{layouts/fragments/navbar.html :: nav}"></nav>
+
+    <!-- CONTENIDO DINÁMICO DE LA PÁGINA -->
+    <div class="container main-content">
+      <div layout:fragment="page-content"></div>
+    </div>
+
+    <!-- FRAGMENTO FOOTER -->
+    <footer th:replace="~{layouts/fragments/footer.html :: footer}"></footer>
+
+    <!-- FRAGMENTO SCRIPTS -->
+    <th:block th:replace="~{layouts/fragments/scripts.html :: scripts}"></th:block>
+  </body>
+</html>

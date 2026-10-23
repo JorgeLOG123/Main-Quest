@@ -1,0 +1,43 @@
+<nav id="nav" th:fragment="nav" xmlns:th="http://www.thymeleaf.org" class="navbar navbar-expand-lg mq-navbar py-3">
+    <div class="container">
+        <a class="mq-brand" th:href="@{/}">
+            <div class="mq-brand-icon">MQ</div>
+            <span class="mq-brand-text" th:text="#{navbar.brand}">Main Quest</span>
+        </a>
+
+        <div class="d-flex align-items-center gap-3 ms-auto">
+            <!-- Status badge -->
+            <span class="status-badge d-none d-md-inline-flex">
+                <span class="status-dot"></span>
+                <span th:text="#{navbar.status.connected}">Spring Boot :8080 Conectado</span>
+            </span>
+
+            <!-- Administración -->
+            <a class="btn btn-outline-light btn-sm" th:href="@{/admin/dashboard}">
+                <i class="fa-solid fa-gear"></i> <span th:text="#{navbar.admin}">Administración</span>
+            </a>
+
+            <!-- Solo se ve si NO hay nadie logueado -->
+            <th:block th:if="${session.info == null}">
+                <a class="btn btn-outline-light btn-sm" th:href="@{/login}">
+                    <i class="fa-solid fa-right-to-bracket"></i> <span th:text="#{navbar.btn.login}">Ingresar</span>
+                </a>
+                <a class="btn btn-mq-primary btn-sm px-3" th:href="@{/registro}">
+                    <i class="fa-solid fa-user-plus"></i> <span th:text="#{navbar.btn.register}">Registrarse</span>
+                </a>
+            </th:block>
+
+            <!-- Solo se ve si HAY alguien logueado -->
+            <a th:if="${session.info != null}" class="btn btn-outline-light btn-sm" th:href="@{/profile/view}">
+                <i class="fa-solid fa-user"></i>
+                <span th:text="#{navbar.btn.account}">Mi cuenta</span>
+                <span class="text-white-50 ms-1" th:text="'(' + ${session.info.email} + ')'"></span>
+            </a>
+
+            <!-- Jugar -->
+            <a class="btn btn-mq-primary btn-sm px-3" th:href="@{/game}">
+                <i class="fa-solid fa-play"></i> <span th:text="#{navbar.btn.play}">Jugar</span>
+            </a>
+        </div>
+    </div>
+</nav>

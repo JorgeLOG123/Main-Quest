@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<head>
+    <title th:text="#{login.title}">Main Quest — Iniciar Sesión</title>
+</head>
+<body>
+
+<div layout:fragment="page-content">
+    <div class="mq-auth" data-bs-theme="dark">
+        <h1 class="mq-auth-title" th:text="#{login.form.title}">Continuar Aventura</h1>
+        <p class="mq-auth-sub" th:text="#{login.form.subtitle}">Ingresa tus credenciales para retomar tu progreso.</p>
+
+        <form th:action="@{/login}" method="post" th:object="${form}">
+
+            <div class="mb-3">
+                <label class="form-label mq-label" for="email" th:text="#{common.label.email}">Correo Electrónico</label>
+                <input type="email" th:field="*{email}" class="form-control mq-input" th:errorclass="is-invalid" th:maxlength="${form.emailMaxLength}" placeholder="jorge@email.com" th:placeholder="#{common.placeholder.email}" required>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label mq-label" for="contrasena" th:text="#{common.label.password}">Contraseña</label>
+                <input type="password" th:field="*{contrasena}" class="form-control mq-input" th:errorclass="is-invalid" placeholder="••••••••" th:placeholder="#{common.placeholder.password}" required>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}"></div>
+            </div>
+
+            <button type="submit" class="btn-mq-primary w-100" th:text="#{login.form.btn.submit}">Iniciar Sesión</button>
+
+            <div class="text-center mt-3">
+                <a th:href="@{/registro}" class="mq-link small" th:text="#{login.link.no.account}">¿No tenés cuenta? Registrate</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

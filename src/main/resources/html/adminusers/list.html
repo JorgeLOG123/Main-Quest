@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<head>
+    <title th:text="#{admin.users.title}">Main Quest — Administración</title>
+</head>
+<body>
+
+<div layout:fragment="page-content">
+
+    <div class="mq-section-head">
+        <h1 class="mq-h2 mb-0" th:text="#{admin.users.section.title}">Jugadores registrados</h1>
+        <a th:href="@{/admin/user/edit}" class="btn-mq-primary btn-sm" th:aria-label="#{nuevo.jugador.btn}">
+            <i class="fa-solid fa-plus"></i> <span th:text="#{nuevo.jugador.btn}">Nuevo jugador</span>
+        </a>
+    </div>
+
+    <div class="glass-card mq-table-wrap">
+        <table class="mq-table">
+            <thead>
+            <tr>
+                <th class="d-none d-md-table-cell" th:text="#{col.id}">ID</th>
+                <th th:text="#{col.username}">Jugador</th>
+                <th class="d-none d-sm-table-cell" th:text="#{col.email}">Email</th>
+                <th th:text="#{col.xp}">XP</th>
+                <th class="text-end" th:text="#{col.actions}">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="jugador : ${listado}">
+                <td class="d-none d-md-table-cell mq-cell-id" th:text="${jugador.id}"></td>
+                <td class="mq-cell-name" th:text="${jugador.nombre}"></td>
+                <td class="d-none d-sm-table-cell mq-text-2" th:text="${jugador.email}"></td>
+                <td class="mq-cell-xp" th:text="${jugador.xp}"></td>
+                <td class="text-end mq-cell-actions">
+                    <a th:href="@{/admin/user/edit(id=${jugador.id})}" class="btn-mq-ghost btn-sm" th:aria-label="#{editar.btn}">
+                        <i class="fa-solid fa-pen"></i> <span class="d-none d-lg-inline" th:text="#{editar.btn}">Editar</span>
+                    </a>
+                    <button type="button" class="btn-mq-ghost mq-danger btn-sm"
+                            th:id="${'btnDelete-' + jugador.id}"
+                            onclick="confirmarEliminacion(this)"
+                            th:attr="data-id=${jugador.id}, data-nombre=${jugador.nombre}, aria-label=#{eliminar.btn}"
+                            data-bs-toggle="modal" data-bs-target="#deletionModal">
+                        <i class="fa-solid fa-trash"></i> <span class="d-none d-lg-inline" th:text="#{eliminar.btn}">Eliminar</span>
+                    </button>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(listado)}">
+                <td colspan="5" class="mq-empty" th:text="#{sin.jugadores}">Todavía no hay jugadores registrados</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="deletionModal" class="modal fade" tabindex="-1" data-bs-theme="dark">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content mq-modal">
+                <form id="deletionFrm" th:action="@{/admin/user/delete}" method="post">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title font-heading" th:text="#{delete.section.title}">Eliminar jugador</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <input id="id" name="id" type="hidden" value="" />
+                        <p>
+                            <span th:text="#{delete.confirm.message}">¿Seguro que querés eliminar a</span>
+                            <strong id="deletionModal-nombre"></strong>?
+                        </p>
+                        <small class="mq-danger-text" th:text="#{delete.warning}">Esta acción no se puede deshacer.</small>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn-mq-ghost" data-bs-dismiss="modal" th:text="#{close.btn}">Cancelar</button>
+                        <button type="submit" class="btn-mq-primary mq-danger" th:text="#{delete.btn}">Eliminar</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <th:block layout:fragment="page-script">
+        <script type="text/javascript">
+            function confirmarEliminacion(btn) {
+                const id = btn.dataset.id;
+                const nombre = btn.dataset.nombre;
+
+                document.getElementById('id').value = id;
+                document.getElementById('deletionModal-nombre').textContent = nombre;
+            }
+        </script>
+    </th:block>
+
+</div>
+
+</body>
+</html>

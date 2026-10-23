@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<head>
+    <title th:text="#{home.title}">Main Quest — Inicio</title>
+</head>
+<body>
+
+<!-- CONTENIDO ÚNICO DE HOME (Se inyecta en el layout default.html) -->
+<div layout:fragment="page-content">
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7 hero-copy">
+                <span class="mq-eyebrow" th:text="#{home.hero.badge}">
+                    🎮 Gamificación para tu Carrera Profesional
+                </span>
+                <h1 class="hero-title" th:text="#{home.hero.title}">Convierte tu búsqueda de empleo en una Aventura RPG</h1>
+                <p class="hero-subtitle" th:text="#{home.hero.subtitle}">
+                    Cada currículum enviado, entrevista agendada y contacto realizado te otorga XP real para subir de nivel y desbloquear nuevos rangos.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a th:href="@{/game}" class="btn-mq-primary">
+                        <i class="fa-solid fa-play"></i> <span th:text="#{home.hero.btn.play}">Empezar Aventura</span>
+                    </a>
+                    <a href="#misiones" class="btn-mq-outline">
+                        <i class="fa-solid fa-gamepad"></i> <span th:text="#{home.hero.btn.missions}">Ver Misiones Disponibles</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <!-- PLAYER CARD DEMO -->
+                <div class="player-card" id="cardJugador">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="player-avatar-wrapper">
+                                <div class="player-avatar">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="h5 mb-1" id="nombreJugador">Jorge (Jugador 1)</h3>
+                                <span class="rank-badge" id="badgeRango">Junior</span>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <div class="mq-level" id="txtNivel">Nivel 1</div>
+                            <small class="mq-text-2" th:text="#{home.player.role}">Desarrollador Java</small>
+                        </div>
+                    </div>
+
+                    <div class="mq-meta-row">
+                        <span th:text="#{home.player.level.label}">Progreso de Nivel</span>
+                        <span><strong id="txtXPActual">0</strong> / 100 XP</span>
+                    </div>
+
+                    <div class="xp-bar-container">
+                        <div class="xp-bar-fill" id="barraXP" style="width: 0%;"></div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-val" id="statXP">0</div>
+                            <div class="stat-label" th:text="#{home.player.stat.xp}">XP Total</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-val" id="statMisiones">0</div>
+                            <div class="stat-label" th:text="#{home.player.stat.missions}">Completadas</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-val" id="statRacha">3 Días</div>
+                            <div class="stat-label" th:text="#{home.player.stat.streak}">Racha</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUESTS SECTION -->
+    <section class="mq-section" id="misiones">
+        <div class="mq-section-head">
+            <div>
+                <h2 class="mq-h2" th:text="#{home.quests.title}">Tablero de Misiones</h2>
+                <p class="mq-text-2" th:text="#{home.quests.subtitle}">Completa acciones reales de tu búsqueda laboral para ganar experiencia.</p>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <button class="btn-mq-ghost btn-sm" data-bs-toggle="modal" data-bs-target="#modalNuevaMision">
+                    <i class="fa-solid fa-plus"></i> <span th:text="#{home.hero.btn.newMission}">Crear Misión</span>
+                </button>
+                <button class="btn-mq-ghost btn-sm" id="btnReset">
+                    <i class="fa-solid fa-rotate-left"></i> <span th:text="#{home.quests.btn.reset}">Reiniciar Demo</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="todas" th:text="#{home.filter.all}">Todas las misiones</button>
+            <button class="filter-btn" data-filter="general" th:text="#{home.filter.general}">Generales</button>
+            <button class="filter-btn" data-filter="semanal" th:text="#{home.filter.semanal}">Semanales</button>
+            <button class="filter-btn" data-filter="diaria" th:text="#{home.filter.diaria}">Diarias</button>
+        </div>
+
+        <!-- Quest List -->
+        <div id="listaMisiones">
+            <div class="quest-card" data-tipo="general" data-xp="50">
+                <div class="quest-check"><i class="fa-solid fa-check"></i></div>
+                <div class="quest-info">
+                    <div class="quest-title" th:text="#{home.quest1.title}">Personalizar Currículum para una Postulación Específica</div>
+                    <div class="quest-meta">
+                        <span><i class="fa-regular fa-folder"></i> <span th:text="#{quest.type.general}">General</span></span>
+                        <span>•</span>
+                        <span th:text="#{home.quest1.description}">Adaptar palabras clave e historia laboral</span>
+                    </div>
+                </div>
+                <div class="quest-xp-tag">+50 XP</div>
+            </div>
+
+            <div class="quest-card" data-tipo="semanal" data-xp="80">
+                <div class="quest-check"><i class="fa-solid fa-check"></i></div>
+                <div class="quest-info">
+                    <div class="quest-title" th:text="#{home.quest2.title}">Simular una Entrevista Técnica (Método STAR)</div>
+                    <div class="quest-meta">
+                        <span><i class="fa-regular fa-calendar"></i> <span th:text="#{quest.type.semanal}">Semanal</span></span>
+                        <span>•</span>
+                        <span th:text="#{home.quest2.description}">Practicar respuestas para preguntas frecuentes</span>
+                    </div>
+                </div>
+                <div class="quest-xp-tag">+80 XP</div>
+            </div>
+
+            <div class="quest-card" data-tipo="general" data-xp="40">
+                <div class="quest-check"><i class="fa-solid fa-check"></i></div>
+                <div class="quest-info">
+                    <div class="quest-title" th:text="#{home.quest3.title}">Optimizar Perfil de LinkedIn y Headline Profesional</div>
+                    <div class="quest-meta">
+                        <span><i class="fa-regular fa-folder"></i> <span th:text="#{quest.type.general}">General</span></span>
+                        <span>•</span>
+                        <span th:text="#{home.quest3.description}">Agregar proyectos de Spring Boot e Hibernate</span>
+                    </div>
+                </div>
+                <div class="quest-xp-tag">+40 XP</div>
+            </div>
+
+            <div class="quest-card" data-tipo="diaria" data-xp="30">
+                <div class="quest-check"><i class="fa-solid fa-check"></i></div>
+                <div class="quest-info">
+                    <div class="quest-title" th:text="#{home.quest4.title}">Postular a 2 Ofertas de Empleo Relacionadas</div>
+                    <div class="quest-meta">
+                        <span><i class="fa-solid fa-bolt"></i> <span th:text="#{quest.type.diaria}">Diaria</span></span>
+                        <span>•</span>
+                        <span th:text="#{home.quest4.description}">Enviar candidaturas en portales laborales</span>
+                    </div>
+                </div>
+                <div class="quest-xp-tag">+30 XP</div>
+            </div>
+
+            <div class="quest-card" data-tipo="diaria" data-xp="25">
+                <div class="quest-check"><i class="fa-solid fa-check"></i></div>
+                <div class="quest-info">
+                    <div class="quest-title" th:text="#{home.quest5.title}">Conectar con 3 reclutadores o desarrolladores</div>
+                    <div class="quest-meta">
+                        <span><i class="fa-solid fa-bolt"></i> <span th:text="#{quest.type.diaria}">Diaria</span></span>
+                        <span>•</span>
+                        <span th:text="#{home.quest5.description}">Enviar nota personalizada de networking</span>
+                    </div>
+                </div>
+                <div class="quest-xp-tag">+25 XP</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RANKS SECTION -->
+    <section class="mq-section">
+        <div class="mq-section-head">
+            <div>
+                <h2 class="mq-h2" th:text="#{home.ranks.title}">Rangos de Jugador</h2>
+                <p class="mq-text-2" th:text="#{home.ranks.subtitle}">Tu nivel refleja el esfuerzo y constancia en tu búsqueda profesional.</p>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-3 col-6">
+                <div class="rank-card active-rank" id="rank-Junior">
+                    <div class="rank-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h4 class="font-heading" th:text="#{rank.junior}">Junior</h4>
+                    <p th:text="#{home.rank.junior.range}">Nivel 1 - 2</p>
+                    <small th:text="#{home.rank.junior.xp}">Desde 0 XP</small>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="rank-card" id="rank-Semi-Senior">
+                    <div class="rank-icon"><i class="fa-solid fa-fire"></i></div>
+                    <h4 class="font-heading" th:text="#{rank.semisenior}">Semi Senior</h4>
+                    <p th:text="#{home.rank.semisenior.range}">Nivel 3 - 4</p>
+                    <small th:text="#{home.rank.semisenior.xp}">Desde 200 XP</small>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="rank-card" id="rank-Senior">
+                    <div class="rank-icon"><i class="fa-solid fa-crown"></i></div>
+                    <h4 class="font-heading" th:text="#{rank.senior}">Senior</h4>
+                    <p th:text="#{home.rank.senior.range}">Nivel 5 - 6</p>
+                    <small th:text="#{home.rank.senior.xp}">Desde 400 XP</small>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="rank-card" id="rank-Experto">
+                    <div class="rank-icon"><i class="fa-solid fa-gem"></i></div>
+                    <h4 class="font-heading" th:text="#{rank.experto}">Experto</h4>
+                    <p th:text="#{home.rank.experto.range}">Nivel 7+</p>
+                    <small th:text="#{home.rank.experto.xp}">Desde 600 XP</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL JUGADOR -->
+    <div class="modal fade" id="modalJugador" tabindex="-1" aria-hidden="true" data-bs-theme="dark">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content mq-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title font-heading"><i class="fa-solid fa-user-shield mq-accent"></i> <span th:text="#{home.modal.player.title}">Registrar Jugador</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formJugador">
+                        <div class="mb-3">
+                            <label class="form-label mq-label" th:text="#{common.label.playerName}">Nombre de Jugador</label>
+                            <input type="text" class="form-control mq-input" id="inputNombre" placeholder="Ej: Jorge Dev" th:placeholder="#{common.placeholder.name}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label mq-label" th:text="#{common.label.email}">Correo Electrónico</label>
+                            <input type="email" class="form-control mq-input" id="inputEmail" placeholder="jorge@email.com" th:placeholder="#{common.placeholder.email}" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label mq-label" th:text="#{common.label.password}">Contraseña</label>
+                            <input type="password" class="form-control mq-input" minlength="5" placeholder="••••••••" th:placeholder="#{common.placeholder.password}" required>
+                        </div>
+                        <button type="submit" class="btn-mq-primary w-100" th:text="#{home.modal.player.btn.submit}">Guardar Jugador</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL NUEVA MISION -->
+    <div class="modal fade" id="modalNuevaMision" tabindex="-1" aria-hidden="true" data-bs-theme="dark">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content mq-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title font-heading"><i class="fa-solid fa-plus-circle mq-accent"></i> <span th:text="#{home.modal.mission.title}">Nueva Misión</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formMision">
+                        <div class="mb-3">
+                            <label class="form-label mq-label" th:text="#{home.modal.mission.label.name}">Nombre de la Misión</label>
+                            <input type="text" class="form-control mq-input" id="inputMisionNombre" placeholder="Ej: Enviar prueba técnica de Spring Boot" th:placeholder="#{home.modal.mission.placeholder.name}" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label mq-label" th:text="#{home.modal.mission.label.type}">Tipo</label>
+                                <select class="form-select mq-input" id="selectMisionTipo">
+                                    <option value="general" th:text="#{quest.type.general}">General</option>
+                                    <option value="semanal" th:text="#{quest.type.semanal}">Semanal</option>
+                                    <option value="diaria" th:text="#{quest.type.diaria}">Diaria</option>
+                                </select>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label mq-label" th:text="#{home.modal.mission.label.xp}">Recompensa (XP)</label>
+                                <input type="number" class="form-control mq-input" id="inputMisionXP" value="50" min="10" max="500" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-mq-primary w-100" th:text="#{home.modal.mission.btn.submit}">Agregar Misión</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST LEVEL UP -->
+    <div class="toast-level-up" id="toastLevelUp">
+        <div class="mq-toast-icon"><i class="fa-solid fa-trophy"></i></div>
+        <div>
+            <div class="font-heading fs-5" th:text="#{home.toast.levelup.title}">¡LEVEL UP!</div>
+            <div class="small mq-text-2" id="toastMessage">Has alcanzado el Nivel 2</div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
