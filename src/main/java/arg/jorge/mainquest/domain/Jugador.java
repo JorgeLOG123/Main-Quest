@@ -9,7 +9,10 @@ import arg.jorge.mainquest.dtos.JugadorDTO;
 import arg.jorge.mainquest.dtos.DTO;
 import arg.jorge.mainquest.dtos.UsuarioAdminDTO;
 import arg.jorge.mainquest.dtos.JugadorDTO;
-@Entity
+import arg.jorge.mainquest.Enums.Rol;
+import java.util.ArrayList;
+import java.util.List;
+
 @Table(name = "JUGADORES")
 public class Jugador extends Persistible implements Editable<JugadorAdminForm>, Exponible {
     public static final String ERR_EMAIL_OBLIGATORIO = "El email es obligatorio";
@@ -33,19 +36,29 @@ public class Jugador extends Persistible implements Editable<JugadorAdminForm>, 
     @Column(name = "XP")
     private Long xp;
 
+    @Transient // TEMPORAL
+    private List<Rol> roles;
+
     public static final int XP_POR_NIVEL = 100;
 
     // Solo para hibernate
     protected Jugador() { }
 
     public Jugador(String nombre, String contrasena, String email) {
+        this(nombre, contrasena, email, false);
+    }
+
+    public Jugador(String nombre, String contrasena, String email, boolean isAdmin) {
         setNombre(nombre);
         setContrasena(contrasena);
         setEmail(email);
         this.xp = 0L;
-
+        this.roles = new ArrayList<>();
+        this.roles.add(isAdmin ? Rol.ADMINISTRADOR : Rol.JUGADOR);
     }
-
+    public List<Rol> getRoles() {
+        return roles;
+    }
 
     public Long getXp() {
         return xp;
