@@ -2,6 +2,8 @@ package arg.jorge.mainquest.services;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import arg.jorge.mainquest.domain.Jugador;
+import arg.jorge.mainquest.Enums.Rol;
+import jakarta.persistence.EntityManager;
 import arg.jorge.mainquest.services.JugadorServices;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class JugadorServicesTest {
     @Autowired
     private JugadorServices servicio;
 
+    @Autowired
+    private EntityManager entityManager;
+
     @Test
     public void guardarJugadorCorrectamente() {
         Jugador jugador = EntityHelper.crearJugadorValido();
@@ -30,5 +35,17 @@ public class JugadorServicesTest {
         List<Jugador> jugadores = this.servicio.listartodos();
         assertEquals(1, jugadores.size());
         assertEquals(jugador.getNombre(), jugadores.get(0).getNombre());
+    }
+
+    @Test
+    public void guardarJugadorConSusRoles() {
+        Jugador jugador = EntityHelper.crearJugadorValido();
+        this.servicio.guardar(jugador);
+
+        this.entityManager.flush();
+        this.entityManager.clear();
+
+        Jugador recuperado = this.servicio.listartodos().get(0);
+        assertEquals(List.of(Rol.JUGADOR), recuperado.getRoles());
     }
 }

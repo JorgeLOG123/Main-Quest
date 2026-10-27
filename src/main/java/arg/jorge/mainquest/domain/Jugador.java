@@ -13,6 +13,7 @@ import arg.jorge.mainquest.Enums.Rol;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 @Table(name = "JUGADORES")
 public class Jugador extends Persistible implements Editable<JugadorAdminForm>, Exponible {
     public static final String ERR_EMAIL_OBLIGATORIO = "El email es obligatorio";
@@ -36,7 +37,10 @@ public class Jugador extends Persistible implements Editable<JugadorAdminForm>, 
     @Column(name = "XP")
     private Long xp;
 
-    @Transient // TEMPORAL
+    @Enumerated(EnumType.ORDINAL)
+    @ElementCollection(targetClass = Rol.class)
+    @CollectionTable(name = "ROLES_JUGADORES", joinColumns = @JoinColumn(name = "JUGADOR_ID"))
+    @Column(name = "ROL_ID")
     private List<Rol> roles;
 
     public static final int XP_POR_NIVEL = 100;
