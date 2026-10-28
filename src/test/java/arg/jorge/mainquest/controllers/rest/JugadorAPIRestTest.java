@@ -26,6 +26,7 @@ import arg.jorge.mainquest.AbstractApiTest;
 import arg.jorge.mainquest.domain.Jugador;
 import arg.jorge.mainquest.dtos.JugadorDTO;
 import arg.jorge.mainquest.services.JugadorServices;
+import java.util.Base64;
 
 public class JugadorAPIRestTest extends AbstractApiTest {
     private static final String NOMBRE = "jugadorTestApi";
@@ -51,6 +52,7 @@ public class JugadorAPIRestTest extends AbstractApiTest {
     }
 
     @Test
+
     public void listarJugadoresDevuelveElJugadorRegistrado() {
         URI uri = URI.create(LOCAL_SERVER + ":" + puerto() + JugadorAPI.LIST_JUGADORES_URL);
 
@@ -58,6 +60,8 @@ public class JugadorAPIRestTest extends AbstractApiTest {
                 .newBuilder(uri)
                 .GET()
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Basic " +                              // 👈 nueva
+                        Base64.getEncoder().encodeToString("test:test123".getBytes()))      // 👈 nueva
                 .build();
 
         try {
