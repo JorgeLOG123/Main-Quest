@@ -15,6 +15,10 @@ import arg.jorge.mainquest.repositories.JugadorRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import arg.jorge.mainquest.security.InfoUserAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 
 @Service
 public class JugadorServicesImpl extends ExponibleServiceImpl <Jugador, JugadorRepository>
@@ -183,5 +187,19 @@ public class JugadorServicesImpl extends ExponibleServiceImpl <Jugador, JugadorR
         Jugador jugador = resultado.get();
         jugador.updatePropertiesFromForm(form);
         return jugador;
+    }
+
+
+    @Override
+    public void login(String email) {
+        Jugador jugador = obtenerPorEmail(email);
+
+        InfoUserAuthenticationToken token = new InfoUserAuthenticationToken(
+                jugador.getId(), jugador.getEmail(), jugador.collectAuthorities());
+        token.setNombre(jugador.getNombre());
+        if (jugador.getImagen() != null) token.setIdImagen(jugador.getImagen().getId());
+
+        SecurityContext context = SecurityContextHolder.getContext();
+        context.setAuthentication(token);
     }
 }

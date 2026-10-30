@@ -15,4 +15,8 @@ public enum Rol {
     public Permiso[] getPermisos() {
         return this.permisos.clone();
     }
+
+    public String getSecurityName() {
+        return "ROLE_" + name();
+    }
 }

@@ -40,4 +40,6 @@ public interface JugadorServices extends ExponibleService {   // ‚Üê solo cambi√
     void actualizarPerfil(ProfileForm form);
 
     void actualizar(JugadorAdminForm form);
+
+    void login(String email);
 }

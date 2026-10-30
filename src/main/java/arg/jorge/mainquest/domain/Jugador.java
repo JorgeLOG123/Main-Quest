@@ -12,6 +12,9 @@ import arg.jorge.mainquest.dtos.JugadorDTO;
 import arg.jorge.mainquest.Enums.Rol;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 
 @Entity
 @Table(name = "JUGADORES")
@@ -62,6 +65,16 @@ public class Jugador extends Persistible implements Editable<JugadorAdminForm>, 
     }
     public List<Rol> getRoles() {
         return roles;
+    }
+
+    public List<GrantedAuthority> collectAuthorities() {
+        List<GrantedAuthority> credentials = new ArrayList<>();
+
+        for (Rol rol : this.roles) {
+            credentials.add(new SimpleGrantedAuthority(rol.getSecurityName()));
+        }
+
+        return credentials;
     }
 
     public Long getXp() {
