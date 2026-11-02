@@ -3,6 +3,12 @@ package arg.jorge.mainquest.controllers;
 import arg.jorge.mainquest.session.InfoSession;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import arg.jorge.mainquest.security.InfoUserAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+
 
 @Controller
 public abstract class BaseController {
@@ -19,13 +25,20 @@ public abstract class BaseController {
      * en lugar de renderizar una vista sin cambiar la URL actual.
      */
 
-    protected InfoSession getInfoSession(HttpSession session) {
-        return (InfoSession) session.getAttribute(INFO_ATTRIBUTE);
+    public InfoUserAuthenticationToken authenticationToken() {
+        SecurityContext context = SecurityContextHolder.getContext();
+
+        Authentication auth = null;
+        if (context != null && context.getAuthentication() != null) {
+            auth = context.getAuthentication();
+        }
+
+        return (InfoUserAuthenticationToken) auth;
     }
 
-    protected boolean estaUsuarioLogueado(HttpSession session) {
-        InfoSession info = getInfoSession(session);
-        return info != null && info.isValidEmail();
+    public boolean estaUsuarioLogueado() {
+        Authentication auth = authenticationToken();
+        return auth != null;
     }
 
 

@@ -13,7 +13,7 @@ public class GameController extends BaseController {
     public String init(HttpSession session) {
         String finalURL = GAME_WELCOME_VIEW;
 
-        if (!estaUsuarioLogueado(session)) {
+        if (!estaUsuarioLogueado()) {
             finalURL = redirect(LoginController.LOGIN_URL);
         }
 

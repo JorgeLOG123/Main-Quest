@@ -4,6 +4,7 @@ import arg.jorge.mainquest.controllers.BaseController;
 import arg.jorge.mainquest.controllers.LoginController;
 import arg.jorge.mainquest.domain.Imagen;
 import arg.jorge.mainquest.forms.ProfileForm;
+import arg.jorge.mainquest.security.InfoUserAuthenticationToken;
 import arg.jorge.mainquest.services.ImagenService;
 import arg.jorge.mainquest.services.JugadorServices;
 import arg.jorge.mainquest.session.InfoSession;
@@ -34,12 +35,12 @@ public class ProfileController extends BaseController {
 
     @GetMapping(value = VIEW_PROFILE_URL)
     public String viewProfile(HttpSession session, Model model) {
-        if (!estaUsuarioLogueado(session)) {
+        if (!estaUsuarioLogueado()) {
             return redirect(LoginController.LOGIN_URL);
         }
 
-        InfoSession info = getInfoSession(session);
-        ProfileForm form = this.servicio.prepareProfile(info.getEmail());
+        InfoUserAuthenticationToken token = authenticationToken();
+        ProfileForm form = this.servicio.prepareProfile(token.getEmail());
         model.addAttribute(FORM_ATTRIBUTE, form);
 
         return PROFILE_VIEW;
@@ -48,12 +49,12 @@ public class ProfileController extends BaseController {
     @PostMapping(value = SAVE_PROFILE_URL)
     public String saveProfile(HttpSession session,
                               @ModelAttribute(FORM_ATTRIBUTE) ProfileForm form) {
-        if (!estaUsuarioLogueado(session)) {
+        if (!estaUsuarioLogueado()) {
             return redirect(LoginController.LOGIN_URL);
         }
 
-        InfoSession info = getInfoSession(session);
-        ProfileForm actual = this.servicio.prepareProfile(info.getEmail());
+        InfoUserAuthenticationToken token = authenticationToken();
+        ProfileForm actual = this.servicio.prepareProfile(token.getEmail());
         form.setId(actual.getId());
         form.setEmail(actual.getEmail());
 
@@ -61,7 +62,6 @@ public class ProfileController extends BaseController {
 
         return redirect(VIEW_PROFILE_URL);
     }
-
 
 
 
