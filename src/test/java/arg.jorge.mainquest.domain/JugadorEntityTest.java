@@ -61,8 +61,7 @@ public class JugadorEntityTest {
         Jugador jugador = new Jugador("Jorge", "pass1234", "jorge@mail.com");
 
         List<GrantedAuthority> authorities = jugador.collectAuthorities();
-
-        assertEquals(1, authorities.size());
+        assertEquals(2, authorities.size());
         assertEquals("ROLE_JUGADOR", authorities.get(0).getAuthority());
     }
 

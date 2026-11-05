@@ -28,12 +28,13 @@ public class SecurityConfig {
                         .requestMatchers(HomeController.HOME_URL, GameController.GAME_AS_GUEST_URL).permitAll()
                         .requestMatchers(LoginController.LOGIN_URL, LoginController.SIGN_IN_URL).permitAll()
                         .requestMatchers(RegistracionController.REGISTRACION_URL).permitAll()
-                        .requestMatchers(AdminController.ADMIN_URL + "/**").hasRole(Rol.ADMINISTRADOR.name())
+                        .requestMatchers(AdminController.ADMIN_URL + "/**").hasAnyRole(Rol.ADMINISTRADOR.name(), Rol.ARBITRO.name())
                         .anyRequest().authenticated())
                 .formLogin(page -> page.loginPage(LoginController.SIGN_IN_URL))
                 .build();
     }
 
+    @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return (request, response, accessDeniedException) -> {
             response.sendRedirect(LoginController.SIGN_IN_URL);

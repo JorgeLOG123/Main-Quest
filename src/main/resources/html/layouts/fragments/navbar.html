@@ -15,8 +15,8 @@
                 <span th:text="#{navbar.status.connected}">Spring Boot :8080 Conectado</span>
             </span>
 
-            <!-- Administración: solo administradores -->
-            <a sec:authorize="isAuthenticated() && hasRole('ROLE_ADMINISTRADOR')"
+            <!-- Administración: administradores y árbitros -->
+            <a sec:authorize="isAuthenticated() && hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_ARBITRO')"
                class="btn btn-outline-light btn-sm" th:href="@{/admin/dashboard}">
                 <i class="fa-solid fa-gear"></i> <span th:text="#{navbar.admin}">Administración</span>
             </a>
@@ -37,11 +37,13 @@
                 <span th:text="#{navbar.btn.account}">Mi cuenta</span>
                 <span class="text-white-50 ms-1">(<span sec:authentication="email"></span>)</span>
             </a>
+
             <!-- Cerrar sesión: solo si HAY alguien logueado -->
             <a sec:authorize="isAuthenticated()" class="btn btn-outline-light btn-sm" th:href="@{/logout}">
                 <i class="fa-solid fa-right-from-bracket"></i> <span th:text="#{navbar.btn.logout}">Cerrar sesión</span>
             </a>
-            <!-- Jugar: jugadores logueados (el administrador no juega) -->
+
+            <!-- Jugar: jugadores logueados (el administrador y el árbitro no juegan) -->
             <a sec:authorize="hasRole('ROLE_JUGADOR')" class="btn btn-mq-primary btn-sm px-3" th:href="@{/game}">
                 <i class="fa-solid fa-play"></i> <span th:text="#{navbar.btn.play}">Jugar</span>
             </a>

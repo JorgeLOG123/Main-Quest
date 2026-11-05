@@ -72,6 +72,7 @@ public class Jugador extends Persistible implements Editable<JugadorAdminForm>, 
 
         for (Rol rol : this.roles) {
             credentials.add(new SimpleGrantedAuthority(rol.getSecurityName()));
+            credentials.addAll(rol.getSecurityPermissions());
         }
 
         return credentials;
@@ -181,5 +182,9 @@ public class Jugador extends Persistible implements Editable<JugadorAdminForm>, 
     public int getNivel() {
         return calcularNivel();
     }
+
+
+
+
 }
 
