@@ -49,9 +49,7 @@ public class ProfileController extends BaseController {
     @PostMapping(value = SAVE_PROFILE_URL)
     public String saveProfile(HttpSession session,
                               @ModelAttribute(FORM_ATTRIBUTE) ProfileForm form) {
-        if (!estaUsuarioLogueado()) {
-            return redirect(LoginController.LOGIN_URL);
-        }
+
 
         InfoUserAuthenticationToken token = authenticationToken();
         ProfileForm actual = this.servicio.prepareProfile(token.getEmail());

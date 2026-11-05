@@ -1,4 +1,7 @@
-<nav id="nav" th:fragment="nav" xmlns:th="http://www.thymeleaf.org" class="navbar navbar-expand-lg mq-navbar py-3">
+<nav id="nav" th:fragment="nav"
+     xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+     class="navbar navbar-expand-lg mq-navbar py-3">
     <div class="container">
         <a class="mq-brand" th:href="@{/}">
             <div class="mq-brand-icon">MQ</div>
@@ -12,14 +15,15 @@
                 <span th:text="#{navbar.status.connected}">Spring Boot :8080 Conectado</span>
             </span>
 
-            <!-- Administración -->
-            <a class="btn btn-outline-light btn-sm" th:href="@{/admin/dashboard}">
+            <!-- Administración: solo administradores -->
+            <a sec:authorize="isAuthenticated() && hasRole('ROLE_ADMINISTRADOR')"
+               class="btn btn-outline-light btn-sm" th:href="@{/admin/dashboard}">
                 <i class="fa-solid fa-gear"></i> <span th:text="#{navbar.admin}">Administración</span>
             </a>
 
             <!-- Solo se ve si NO hay nadie logueado -->
-            <th:block th:if="${session.info == null}">
-                <a class="btn btn-outline-light btn-sm" th:href="@{/login}">
+            <th:block sec:authorize="!isAuthenticated()">
+                <a class="btn btn-outline-light btn-sm" th:href="@{/signin}">
                     <i class="fa-solid fa-right-to-bracket"></i> <span th:text="#{navbar.btn.login}">Ingresar</span>
                 </a>
                 <a class="btn btn-mq-primary btn-sm px-3" th:href="@{/registro}">
@@ -28,15 +32,20 @@
             </th:block>
 
             <!-- Solo se ve si HAY alguien logueado -->
-            <a th:if="${session.info != null}" class="btn btn-outline-light btn-sm" th:href="@{/profile/view}">
+            <a sec:authorize="isAuthenticated()" class="btn btn-outline-light btn-sm" th:href="@{/profile/view}">
                 <i class="fa-solid fa-user"></i>
                 <span th:text="#{navbar.btn.account}">Mi cuenta</span>
-                <span class="text-white-50 ms-1" th:text="'(' + ${session.info.email} + ')'"></span>
+                <span class="text-white-50 ms-1">(<span sec:authentication="email"></span>)</span>
             </a>
 
-            <!-- Jugar -->
-            <a class="btn btn-mq-primary btn-sm px-3" th:href="@{/game}">
+            <!-- Jugar: jugadores logueados (el administrador no juega) -->
+            <a sec:authorize="hasRole('ROLE_JUGADOR')" class="btn btn-mq-primary btn-sm px-3" th:href="@{/game}">
                 <i class="fa-solid fa-play"></i> <span th:text="#{navbar.btn.play}">Jugar</span>
+            </a>
+
+            <!-- Jugar como invitado: nadie logueado -->
+            <a sec:authorize="!isAuthenticated()" class="btn btn-mq-primary btn-sm px-3" th:href="@{/game/guest}">
+                <i class="fa-solid fa-play"></i> <span th:text="#{navbar.btn.play.as.guest}">Jugar como invitado</span>
             </a>
         </div>
     </div>

@@ -22,6 +22,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 @Controller
 public class LoginController extends BaseController {
     public static final String LOGIN_URL = "/login";
+    public static final String SIGN_IN_URL = "/signin";
     public static final String LOGIN_VIEW = "login";
 
     @Autowired
@@ -35,7 +36,9 @@ public class LoginController extends BaseController {
         binder.addValidators(this.validator);
     }
 
-    @GetMapping(value = LOGIN_URL)
+
+
+    @GetMapping(value = SIGN_IN_URL)
     public String init(Model model) {
         model.addAttribute(FORM_ATTRIBUTE, new LoginForm());
         return LOGIN_VIEW;
