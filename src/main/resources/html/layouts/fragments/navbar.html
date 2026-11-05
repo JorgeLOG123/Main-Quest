@@ -37,7 +37,10 @@
                 <span th:text="#{navbar.btn.account}">Mi cuenta</span>
                 <span class="text-white-50 ms-1">(<span sec:authentication="email"></span>)</span>
             </a>
-
+            <!-- Cerrar sesión: solo si HAY alguien logueado -->
+            <a sec:authorize="isAuthenticated()" class="btn btn-outline-light btn-sm" th:href="@{/logout}">
+                <i class="fa-solid fa-right-from-bracket"></i> <span th:text="#{navbar.btn.logout}">Cerrar sesión</span>
+            </a>
             <!-- Jugar: jugadores logueados (el administrador no juega) -->
             <a sec:authorize="hasRole('ROLE_JUGADOR')" class="btn btn-mq-primary btn-sm px-3" th:href="@{/game}">
                 <i class="fa-solid fa-play"></i> <span th:text="#{navbar.btn.play}">Jugar</span>
