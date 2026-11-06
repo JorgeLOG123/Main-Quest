@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-public class MisionAdminController extends AdminController {
+public class MisionAdminWebController extends AdminWebController {
     public static final String CHOOSE_MISIONES_URL = ADMIN_URL + "/mision/choose";
     public static final String EDIT_MISIONES_URL   = ADMIN_URL + "/mision/edit/{type}";
     public static final String SAVE_MISIONES_URL   = ADMIN_URL + "/mision/save/{type}";
@@ -55,7 +55,7 @@ public class MisionAdminController extends AdminController {
             return FORM_MISIONES_VIEW;
         }
 
-        return redirect(DashboardController.DASHBOARD_URL);
+        return redirect(DashboardWebController.DASHBOARD_URL);
 
 
     }

@@ -19,7 +19,7 @@
                 </h2>
 
                 <form th:object="${form}"
-                      th:action="@{/admin/mision/save/{type}(type=${form.type})}"
+                      th:action="@{/web/admin/mision/save/{type}(type=${form.type})}"
                       method="post">
 
 
@@ -55,7 +55,7 @@
                     <input type="hidden" th:field="*{id}"/>
 
                     <div class="d-flex gap-2 justify-content-end mt-4">
-                        <a th:href="@{/admin/mision/choose}" class="btn btn-outline-light"
+                        <a th:href="@{/web/admin/mision/choose}" class="btn btn-outline-light"
                            th:text="#{mision.form.btn.cancel}">Cancelar</a>
                         <button type="submit" class="btn-mq-primary"
                                 th:text="#{mision.form.btn.save}">Guardar</button>

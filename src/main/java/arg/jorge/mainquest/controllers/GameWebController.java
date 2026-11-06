@@ -6,9 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class GameController extends BaseController {
-    public static final String GAME_URL = "/game";
-    public static final String GAME_AS_GUEST_URL = "/game/guest";
+public class GameWebController extends BaseWebController {
+    public static final String GAME_URL = BASE_URL + "/game";
+    public static final String GAME_AS_GUEST_URL = BASE_URL + "/game/guest";
     private static final String GAME_WELCOME_VIEW = "game/welcome";
 
     @GetMapping(value = GAME_URL)

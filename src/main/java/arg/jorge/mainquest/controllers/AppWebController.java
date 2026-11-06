@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
  * para que la URL siempre refleje la página real que se muestra.
  */
 @Controller
-public class AppController extends BaseController {
+public class AppWebController extends BaseWebController {
 
     @GetMapping("/")
     public String root() {
-        return redirect("/home");
+        return redirect(HomeWebController.HOME_URL);
     }
 }

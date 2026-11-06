@@ -1,7 +1,7 @@
 package arg.jorge.mainquest.controllers.admins;
 
 import arg.jorge.mainquest.Validators.JugadorAdminFormValidator;
-import arg.jorge.mainquest.controllers.BaseController;
+import arg.jorge.mainquest.controllers.BaseWebController;
 import arg.jorge.mainquest.domain.Jugador;
 import arg.jorge.mainquest.forms.DeletionForm;
 import arg.jorge.mainquest.forms.JugadorAdminForm;
@@ -17,15 +17,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-public class UsuarioAdminController extends BaseController {
+public class UsuarioAdminWebController extends BaseWebController {
 
-    public static final String LIST_USERS_URL = "/admin/user/list";
-    public static final String EDIT_USERS_URL = "/admin/user/edit";
-    public static final String SAVE_USERS_URL = "/admin/user/save";
+    public static final String LIST_USERS_URL = BASE_URL + "/admin/user/list";
+    public static final String EDIT_USERS_URL = BASE_URL + "/admin/user/edit";
+    public static final String SAVE_USERS_URL = BASE_URL + "/admin/user/save";
     public static final String ID_PARAMETER = "id";
     protected static final String LIST_USERS_VIEW = "adminusers/list";
     protected static final String FORM_USERS_VIEW = "adminusers/form";
-    public static final String DELETE_USERS_URL = "/admin/user/delete";
+    public static final String DELETE_USERS_URL = BASE_URL + "/admin/user/delete";
     @Autowired
     private JugadorServices services;
 

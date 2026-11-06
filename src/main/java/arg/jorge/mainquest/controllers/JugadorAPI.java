@@ -21,9 +21,10 @@ import java.util.List;
 import java.util.stream.Collectors;                       // ← NUEVO
 
 @RestController
-public class JugadorAPI {
+public class JugadorAPI extends BaseAPIController {
     public static final String LIST_JUGADORES_URL = "/api/jugadores";
     public static final String SAVE_JUGADORES_URL = "/api/jugadores/registro";
+    public static final String BASE_JUGADORES_API = BASE_URL + "/jugadores";
 
     @Autowired
     private JugadorServices servicio;

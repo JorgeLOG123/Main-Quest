@@ -12,7 +12,7 @@
 
     <div class="mq-section-head">
         <h1 class="mq-h2 mb-0" th:text="#{admin.misiones.section.title}">Misiones</h1>
-        <a th:href="@{/admin/mision/choose}" class="btn-mq-primary btn-sm" th:aria-label="#{nueva.mision.btn}">
+        <a th:href="@{/web/admin/mision/choose}" class="btn-mq-primary btn-sm" th:aria-label="#{nueva.mision.btn}">
             <i class="fa-solid fa-plus"></i> <span th:text="#{nueva.mision.btn}">Nueva misión</span>
         </a>
     </div>
@@ -53,7 +53,7 @@
                             type="button" class="btn-mq-ghost mq-danger btn-sm"
                             th:id="${'btnDelete-' + mision.id}"
                             onclick="confirmarEliminacion(this)"
-                            th:attr="data-id=${mision.id}, data-nombre=${mision.nombre}, data-url=@{/admin/mision/delete}, aria-label=#{eliminar.btn}"
+                            th:attr="data-id=${mision.id}, data-nombre=${mision.nombre}, data-url=@{/web/admin/mision/delete}, aria-label=#{eliminar.btn}"
                             data-bs-toggle="modal" data-bs-target="#deletionModal">
                         <i class="fa-solid fa-trash"></i> <span class="d-none d-lg-inline" th:text="#{eliminar.btn}">Eliminar</span>
                     </button>

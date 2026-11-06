@@ -20,9 +20,9 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 @Controller
-public class LoginController extends BaseController {
-    public static final String LOGIN_URL = "/login";
-    public static final String SIGN_IN_URL = "/signin";
+public class LoginWebController extends BaseWebController {
+    public static final String LOGIN_URL = BASE_URL + "/login";
+    public static final String SIGN_IN_URL = BASE_URL + "/signin";
     public static final String LOGIN_VIEW = "login";
 
     @Autowired
@@ -55,7 +55,7 @@ public class LoginController extends BaseController {
         SecurityContext context = SecurityContextHolder.getContext();
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
 
-        return redirect(GameController.GAME_URL);
+        return redirect(GameWebController.GAME_URL);
     }
 }
 

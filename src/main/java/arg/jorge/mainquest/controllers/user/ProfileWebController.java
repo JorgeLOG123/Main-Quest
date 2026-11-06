@@ -1,13 +1,12 @@
 package arg.jorge.mainquest.controllers.user;
 
-import arg.jorge.mainquest.controllers.BaseController;
-import arg.jorge.mainquest.controllers.LoginController;
+import arg.jorge.mainquest.controllers.BaseWebController;
+import arg.jorge.mainquest.controllers.LoginWebController;
 import arg.jorge.mainquest.domain.Imagen;
 import arg.jorge.mainquest.forms.ProfileForm;
 import arg.jorge.mainquest.security.InfoUserAuthenticationToken;
 import arg.jorge.mainquest.services.ImagenService;
 import arg.jorge.mainquest.services.JugadorServices;
-import arg.jorge.mainquest.session.InfoSession;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.IOException;
 
 @Controller
-public class ProfileController extends BaseController {
-    public static final String VIEW_PROFILE_URL = "/profile/view";
-    public static final String SAVE_PROFILE_URL = "/profile/save";
-    public static final String VIEW_PICTURE_URL = "/profile/picture/view";
+public class ProfileWebController extends BaseWebController {
+    public static final String VIEW_PROFILE_URL = BASE_URL + "/profile/view";
+    public static final String SAVE_PROFILE_URL = BASE_URL + "/profile/save";
+    public static final String VIEW_PICTURE_URL = BASE_URL + "/profile/picture/view";
     private static final String PROFILE_VIEW = "user/profile";
 
     @Autowired
@@ -36,7 +35,7 @@ public class ProfileController extends BaseController {
     @GetMapping(value = VIEW_PROFILE_URL)
     public String viewProfile(HttpSession session, Model model) {
         if (!estaUsuarioLogueado()) {
-            return redirect(LoginController.LOGIN_URL);
+            return redirect(LoginWebController.LOGIN_URL);
         }
 
         InfoUserAuthenticationToken token = authenticationToken();

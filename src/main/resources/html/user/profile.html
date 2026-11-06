@@ -16,7 +16,7 @@
                 <h2 class="text-light mb-4" th:text="#{profile.section.title}">Mi cuenta</h2>
 
                 <form th:object="${form}"
-                      th:action="@{/profile/save}"
+                      th:action="@{/web/profile/save}"
                       method="post"
                       enctype="multipart/form-data">
 
@@ -24,7 +24,7 @@
                     <div class="position-relative d-inline-block mb-2">
                         <!-- Si TIENE foto: la pedimos a la ventanilla -->
                         <img th:if="${form.mostrarImagen()}"
-                             th:src="@{/profile/picture/view(id=${form.idPicture})}"
+                             th:src="@{/web/profile/picture/view(id=${form.idPicture})}"
                              alt="Foto de perfil"
                              class="rounded-circle border border-3 border-secondary"
                              style="width: 140px; height: 140px; object-fit: cover;"/>

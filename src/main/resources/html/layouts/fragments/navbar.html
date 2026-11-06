@@ -17,39 +17,39 @@
 
             <!-- Administración: administradores y árbitros -->
             <a sec:authorize="isAuthenticated() && hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_ARBITRO')"
-               class="btn btn-outline-light btn-sm" th:href="@{/admin/dashboard}">
+               class="btn btn-outline-light btn-sm" th:href="@{/web/admin/dashboard}">
                 <i class="fa-solid fa-gear"></i> <span th:text="#{navbar.admin}">Administración</span>
             </a>
 
             <!-- Solo se ve si NO hay nadie logueado -->
             <th:block sec:authorize="!isAuthenticated()">
-                <a class="btn btn-outline-light btn-sm" th:href="@{/signin}">
+                <a class="btn btn-outline-light btn-sm" th:href="@{/web/signin}">
                     <i class="fa-solid fa-right-to-bracket"></i> <span th:text="#{navbar.btn.login}">Ingresar</span>
                 </a>
-                <a class="btn btn-mq-primary btn-sm px-3" th:href="@{/registro}">
+                <a class="btn btn-mq-primary btn-sm px-3" th:href="@{/web/registro}">
                     <i class="fa-solid fa-user-plus"></i> <span th:text="#{navbar.btn.register}">Registrarse</span>
                 </a>
             </th:block>
 
             <!-- Solo se ve si HAY alguien logueado -->
-            <a sec:authorize="isAuthenticated()" class="btn btn-outline-light btn-sm" th:href="@{/profile/view}">
+            <a sec:authorize="isAuthenticated()" class="btn btn-outline-light btn-sm" th:href="@{/web/profile/view}">
                 <i class="fa-solid fa-user"></i>
                 <span th:text="#{navbar.btn.account}">Mi cuenta</span>
                 <span class="text-white-50 ms-1">(<span sec:authentication="email"></span>)</span>
             </a>
 
             <!-- Cerrar sesión: solo si HAY alguien logueado -->
-            <a sec:authorize="isAuthenticated()" class="btn btn-outline-light btn-sm" th:href="@{/logout}">
+            <a sec:authorize="isAuthenticated()" class="btn btn-outline-light btn-sm" th:href="@{/web/logout}">
                 <i class="fa-solid fa-right-from-bracket"></i> <span th:text="#{navbar.btn.logout}">Cerrar sesión</span>
             </a>
 
             <!-- Jugar: jugadores logueados (el administrador y el árbitro no juegan) -->
-            <a sec:authorize="hasRole('ROLE_JUGADOR')" class="btn btn-mq-primary btn-sm px-3" th:href="@{/game}">
+            <a sec:authorize="hasRole('ROLE_JUGADOR')" class="btn btn-mq-primary btn-sm px-3" th:href="@{/web/game}">
                 <i class="fa-solid fa-play"></i> <span th:text="#{navbar.btn.play}">Jugar</span>
             </a>
 
             <!-- Jugar como invitado: nadie logueado -->
-            <a sec:authorize="!isAuthenticated()" class="btn btn-mq-primary btn-sm px-3" th:href="@{/game/guest}">
+            <a sec:authorize="!isAuthenticated()" class="btn btn-mq-primary btn-sm px-3" th:href="@{/web/game/guest}">
                 <i class="fa-solid fa-play"></i> <span th:text="#{navbar.btn.play.as.guest}">Jugar como invitado</span>
             </a>
         </div>

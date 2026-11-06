@@ -1,7 +1,5 @@
 package arg.jorge.mainquest.controllers;
 
-import arg.jorge.mainquest.session.InfoSession;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import arg.jorge.mainquest.security.InfoUserAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,7 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 
 @Controller
-public abstract class BaseController {
+public abstract class BaseWebController {
+    public static final String BASE_URL = "/web";
     protected static final String ID_PARAMETER = "id";
 
     // Clave compartida por todos los controladores para el atributo de formulario en el Model

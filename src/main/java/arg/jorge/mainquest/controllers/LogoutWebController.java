@@ -5,8 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class LogoutController extends BaseController {
-    public static final String LOGOUT_URL = "/logout";
+public class LogoutWebController extends BaseWebController {
+    public static final String LOGOUT_URL = BASE_URL + "/logout";
 
     @GetMapping(value = LOGOUT_URL)
     public String logout() {
@@ -14,6 +14,6 @@ public class LogoutController extends BaseController {
 
         SecurityContextHolder.clearContext();
 
-        return redirect(LoginController.SIGN_IN_URL);
+        return redirect(LoginWebController.SIGN_IN_URL);
     }
 }

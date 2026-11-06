@@ -13,7 +13,7 @@
         <h1 class="mq-auth-title" th:text="#{login.form.title}">Continuar Aventura</h1>
         <p class="mq-auth-sub" th:text="#{login.form.subtitle}">Ingresa tus credenciales para retomar tu progreso.</p>
 
-        <form th:action="@{/login}" method="post" th:object="${form}">
+        <form th:action="@{/web/login}" method="post" th:object="${form}">
 
             <div class="mb-3">
                 <label class="form-label mq-label" for="email" th:text="#{common.label.email}">Correo Electrónico</label>
@@ -30,7 +30,7 @@
             <button type="submit" class="btn-mq-primary w-100" th:text="#{login.form.btn.submit}">Iniciar Sesión</button>
 
             <div class="text-center mt-3">
-                <a th:href="@{/registro}" class="mq-link small" th:text="#{login.link.no.account}">¿No tenés cuenta? Registrate</a>
+                <a th:href="@{/web/registro}" class="mq-link small" th:text="#{login.link.no.account}">¿No tenés cuenta? Registrate</a>
             </div>
         </form>
     </div>

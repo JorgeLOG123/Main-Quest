@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-public class RegistracionController extends BaseController {
-    public static final String REGISTRACION_URL = "/registro";
+public class RegistracionWebController extends BaseWebController {
+    public static final String REGISTRACION_URL = BASE_URL + "/registro";
     public static final String SIGN_UP_VIEW = "signup";
 
     @Autowired
@@ -48,6 +48,6 @@ public class RegistracionController extends BaseController {
                 formulario.getEmail()
         );
 
-        return redirect(HomeController.HOME_URL);
+        return redirect(HomeWebController.HOME_URL);
     }
 }

@@ -16,7 +16,7 @@
             Creación de jugador
         </h1>
 
-        <form th:action="@{/admin/user/save}" method="post" th:object="${form}">
+        <form th:action="@{/web/admin/user/save}" method="post" th:object="${form}">
             <input type="hidden" th:field="*{id}">
             <div class="mb-3">
                 <label class="form-label mq-label" for="nombre" th:text="#{common.label.playerName}">Nombre de Jugador</label>
@@ -39,7 +39,7 @@
 
             <div class="d-flex gap-2">
                 <button type="submit" class="btn-mq-primary" th:text="#{guardar.btn}">Guardar</button>
-                <a th:href="@{/admin/user/list}" class="btn-mq-ghost" th:text="#{cancelar.btn}">Cancelar</a>
+                <a th:href="@{/web/admin/user/list}" class="btn-mq-ghost" th:text="#{cancelar.btn}">Cancelar</a>
             </div>
 
         </form>

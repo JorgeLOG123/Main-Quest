@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class DashboardController extends AdminController {
+public class DashboardWebController extends AdminWebController {
     public static final String DASHBOARD_URL = ADMIN_URL + "/dashboard";
     private static final String DASHBOARD_VIEW = ADMIN_VIEW + "/dashboard";
 
